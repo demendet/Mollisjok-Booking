@@ -8,8 +8,17 @@ const CustomDatePicker = ({ checkInDate, checkOutDate, onChange }) => {
   const [selectedEndDate, setSelectedEndDate] = useState(checkOutDate);
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [hoveredDate, setHoveredDate] = useState(null);
   const calendarRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
+
+  // Update isMobile state on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleDateClick = (date) => {
     if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
@@ -27,16 +36,10 @@ const CustomDatePicker = ({ checkInDate, checkOutDate, onChange }) => {
     }
   };
 
-  const handleMouseEnter = (date) => {
-    if (selectedStartDate && !selectedEndDate) {
-      setHoveredDate(date);
-    }
-  };
-
   const getDatesInRange = () => {
-    if (!selectedStartDate || (!selectedEndDate && !hoveredDate)) return [];
+    if (!selectedStartDate || !selectedEndDate) return [];
     const start = selectedStartDate;
-    const end = selectedEndDate || hoveredDate || start;
+    const end = selectedEndDate;
     const dates = [];
     let currentDate = new Date(start);
 
@@ -84,86 +87,129 @@ const CustomDatePicker = ({ checkInDate, checkOutDate, onChange }) => {
       return true;
     }
 
-    // Example: Disable dates from December 1st to December 31st (if needed)
-    // const disabledStart = new Date(date.getFullYear(), 11, 1); // December 1st
-    // const disabledEnd = new Date(date.getFullYear(), 11, 31);  // December 31st
-    // if (date >= disabledStart && date <= disabledEnd) {
-    //   return true;
-    // }
-
     return false;
   };
 
   const renderCalendar = () => {
-    const months = [
-      new Date(currentMonth.getFullYear(), currentMonth.getMonth()),
-      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1),
-    ];
-
-    const dateElements = months.map((month) => {
-      const days = [];
-      const firstDayIndex = new Date(
-        month.getFullYear(),
-        month.getMonth(),
-        1
-      ).getDay();
-
-      // Adjust for Sunday as the first day of the week
-      const emptyCells = (firstDayIndex + 6) % 7;
-
-      for (let i = 0; i < emptyCells; i++) {
-        days.push(<div key={`empty-${i}`} className="date-cell empty-cell"></div>);
-      }
-
-      for (let i = 1; i <= daysInMonth(month); i++) {
-        const currentDate = new Date(month.getFullYear(), month.getMonth(), i);
-        const isSelected = getDatesInRange().some(
-          (date) => date.toDateString() === currentDate.toDateString()
-        );
-        const isStartDate =
-          selectedStartDate &&
-          currentDate.toDateString() === selectedStartDate.toDateString();
-        const isEndDate =
-          selectedEndDate &&
-          currentDate.toDateString() === selectedEndDate.toDateString();
-
-        const isDisabled = isDateDisabled(currentDate);
-
-        days.push(
-          <div
-            key={currentDate.getTime()}
-            className={`date-cell ${isSelected ? 'selected' : ''} ${
-              isDisabled ? 'disabled' : ''
-            } ${isStartDate ? 'start' : ''} ${isEndDate ? 'end' : ''}`}
-            onClick={!isDisabled ? () => handleDateClick(currentDate) : null}
-            onMouseEnter={!isDisabled ? () => handleMouseEnter(currentDate) : null}
-          >
-            {i}
-          </div>
-        );
-      }
-
-      return (
-        <div className="month" key={month.getTime()}>
-          <h3>
-            {month.toLocaleString('no-NO', { month: 'long', year: 'numeric' })}
-          </h3>
-          <div className="dates-grid">{days}</div>
-        </div>
-      );
-    });
+    const months = isMobile
+      ? [new Date(currentMonth.getFullYear(), currentMonth.getMonth())]
+      : [
+          new Date(currentMonth.getFullYear(), currentMonth.getMonth()),
+          new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1),
+        ];
 
     return (
       <div className="calendar" ref={calendarRef}>
         <div className="calendar-header">
-          <button type="button" className="arrow-button" onClick={prevMonth}>
-            &#10094;
-          </button>
-          <div className="months-container">{dateElements}</div>
-          <button type="button" className="arrow-button" onClick={nextMonth}>
-            &#10095;
-          </button>
-          <button type="button" className="close-button" onClick={toggleCalendar}>
+          {!isMobile && (
+            <button type="button" className="arrow-button" onClick={prevMonth}>
+              &#10094;
+            </button>
+          )}
+          <div className="months-container">
+            {months.map((month, index) => {
+              const days = [];
+              const firstDayIndex = new Date(
+                month.getFullYear(),
+                month.getMonth(),
+                1
+              ).getDay();
+              // Adjust for Sunday as the first day of the week
+              const emptyCells = (firstDayIndex + 6) % 7;
+
+              for (let i = 0; i < emptyCells; i++) {
+                days.push(
+                  <div
+                    key={`empty-${month.getMonth()}-${i}`}
+                    className="date-cell empty-cell"
+                  ></div>
+                );
+              }
+
+              for (let i = 1; i <= daysInMonth(month); i++) {
+                const currentDate = new Date(
+                  month.getFullYear(),
+                  month.getMonth(),
+                  i
+                );
+                const isSelected = getDatesInRange().some(
+                  (date) => date.toDateString() === currentDate.toDateString()
+                );
+                const isStartDate =
+                  selectedStartDate &&
+                  currentDate.toDateString() ===
+                    selectedStartDate.toDateString();
+                const isEndDate =
+                  selectedEndDate &&
+                  currentDate.toDateString() === selectedEndDate.toDateString();
+
+                const isDisabled = isDateDisabled(currentDate);
+
+                days.push(
+                  <div
+                    key={currentDate.getTime()}
+                    className={`date-cell
+                      ${isDisabled ? 'disabled' : ''}
+                      ${isStartDate ? 'start-date' : ''}
+                      ${isEndDate ? 'end-date' : ''}
+                      ${isSelected ? 'in-range' : ''}`}
+                    onClick={
+                      !isDisabled ? () => handleDateClick(currentDate) : null
+                    }
+                  >
+                    {i}
+                  </div>
+                );
+              }
+
+              return (
+                <React.Fragment key={month.getTime()}>
+                  <div className="month">
+                    <div className="month-header">
+                      {isMobile && index === 0 && (
+                        <button
+                          type="button"
+                          className="arrow-button"
+                          onClick={prevMonth}
+                        >
+                          &#10094;
+                        </button>
+                      )}
+                      <h3 className="calendar-title">
+                        {month.toLocaleString('no-NO', {
+                          month: 'long',
+                          year: 'numeric',
+                        })}
+                      </h3>
+                      {isMobile && index === 0 && (
+                        <button
+                          type="button"
+                          className="arrow-button"
+                          onClick={nextMonth}
+                        >
+                          &#10095;
+                        </button>
+                      )}
+                    </div>
+                    <div className="dates-grid">{days}</div>
+                  </div>
+                  {!isMobile && index === 0 && (
+                    <div className="month-divider"></div>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </div>
+          {!isMobile && (
+            <button type="button" className="arrow-button" onClick={nextMonth}>
+              &#10095;
+            </button>
+          )}
+          <button
+            type="button"
+            className="close-button"
+            onClick={toggleCalendar}
+          >
             &times;
           </button>
         </div>
@@ -173,15 +219,18 @@ const CustomDatePicker = ({ checkInDate, checkOutDate, onChange }) => {
 
   const selectedDateRange =
     selectedStartDate && selectedEndDate
-      ? `${selectedStartDate.toLocaleDateString('no-NO')} - ${selectedEndDate.toLocaleDateString(
+      ? `${selectedStartDate.toLocaleDateString(
           'no-NO'
-        )}`
+        )} - ${selectedEndDate.toLocaleDateString('no-NO')}`
       : 'Select Dates';
 
   // Close calendar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(event.target)
+      ) {
         setShowCalendar(false);
       }
     };

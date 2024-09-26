@@ -33,9 +33,9 @@
   
   .cabin-list {
     display: flex;
-    flex-direction: row; /* Change this to row */
-    flex-wrap: wrap; /* Allow cards to wrap onto the next line */
-    gap: 20px; /* Maintain the gap between cards */
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* Center the cabin cards */
   }
   
   .cabin-card {
@@ -49,6 +49,17 @@
     .main-content {
       flex-direction: column;
     }
+
+    .cabin-list {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .cabin-card {
+      width: calc(100% - 40px);
+      max-width: 500px;
+      margin: 10px;
+    }
   
     .current-selection {
       position: static;
@@ -56,5 +67,10 @@
       margin-top: 20px;
       max-height: none;
     }
+  
+    .cabin-list {
+      flex-direction: column;
+    }
   }
+  
   

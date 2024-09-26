@@ -84,11 +84,12 @@ const AvailabilityGrid = ({ startDate: propsStartDate }) => {
       <div className="grid-header">
         <div className="arrow-buttons">
           <button onClick={prevDates}>&#10094;</button>
+          <span>Availability</span>
           <button onClick={nextDates}>&#10095;</button>
         </div>
-        <span>Availability</span>
       </div>
       <div className="grid-container">
+        {/* Adjust the grid to be more responsive */}
         <div className="grid-row header-row">
           <div className="grid-cell cabin-cell">Cabin</div>
           {dates.map((date) => (

@@ -18,12 +18,14 @@
 }
 
 .grid-container {
-    overflow: visible; /* Ensure it doesn't scroll */
-}
-
-.grid-row {
+    overflow-x: auto; /* Allow horizontal scrolling */
+  }
+  
+  .grid-row {
     display: flex;
-}
+    flex-shrink: 0; /* Prevent shrinking */
+  }
+  
 
 .grid-row.header-row {
     font-weight: bold;
@@ -44,6 +46,7 @@
     font-family: 'Roboto', sans-serif;
     font-weight: bold;
     min-width: 150px;
+    
     text-align: left;
 }
 
@@ -110,4 +113,16 @@
 .MuiAccordionDetails-root {
     max-height: none;
     overflow: visible;
+  }
+
+  @media (max-width: 800px) {
+    .grid-cell {
+      min-width: 55px;
+      font-size: 0.em;
+      padding: 5px;
+    }
+  
+    .cabin-cell {
+      min-width: 100px;
+    }
   }
