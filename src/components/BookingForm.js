@@ -5,7 +5,7 @@ import CabinCard from './CabinCard';
 import CustomDatePicker from './CustomDatePicker';
 import GuestSelector from './GuestSelector';
 import BookingSummary from './BookingSummary'; // Import BookingSummary
-import { Stepper, Step, StepLabel, Typography, Button } from '@mui/material';
+import { Stepper, Step, StepLabel, Typography } from '@mui/material';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { differenceInCalendarDays } from 'date-fns';
