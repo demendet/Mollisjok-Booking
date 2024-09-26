@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
 
-function App() {
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import Header from './components/Header';
+import BookingForm from './components/BookingForm';
+import BookingSummary from './components/BookingSummary';
+import cabinsData from './data/cabinsData';
+import AdminLogin from './components/AdminLogin';
+import AdminDashboard from './components/AdminDashboard';
+import { auth } from './firebaseConfig';
+import { onAuthStateChanged } from 'firebase/auth';
+
+const App = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Header />
+      <Routes>
+        <Route path="/" element={<BookingForm cabins={cabinsData} />} />
+        <Route
+          path="/admin"
+          element={
+            isAdmin ? (
+              <AdminDashboard />
+            ) : (
+              <AdminLogin onLogin={() => navigate('/admin')} />
+            )
+          }
+        />
+        {/* Add other routes as needed */}
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;

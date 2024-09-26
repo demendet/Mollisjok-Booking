@@ -1,0 +1,60 @@
+/* src/components/BookingForm.css */
+
+
+.booking-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .selection-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .main-content {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .cabin-section {
+    flex: 2;
+  }
+  
+  .current-selection {
+    flex: 1;
+    margin-left: 20px;
+    position: sticky;
+    top: 100px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+  
+  .cabin-list {
+    display: flex;
+    flex-direction: row; /* Change this to row */
+    flex-wrap: wrap; /* Allow cards to wrap onto the next line */
+    gap: 20px; /* Maintain the gap between cards */
+  }
+  
+  .cabin-card {
+    width:  calc(47% - 20px); /* Adjust width to account for gap */
+  }
+  
+  
+
+  
+  @media (max-width: 800px) {
+    .main-content {
+      flex-direction: column;
+    }
+  
+    .current-selection {
+      position: static;
+      margin-left: 0;
+      margin-top: 20px;
+      max-height: none;
+    }
+  }
+  

@@ -1,0 +1,14 @@
+/* src/components/Header.css */
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .admin-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  

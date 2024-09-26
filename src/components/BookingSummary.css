@@ -1,0 +1,19 @@
+/* src/components/BookingSummary.css */
+
+.booking-summary {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 8px;
+  }
+  
+  .booking-summary h2,
+  .booking-summary h3 {
+    margin-top: 0;
+  }
+  
+  .user-info-form {
+    margin-top: 20px;
+  }
+  

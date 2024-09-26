@@ -1,0 +1,37 @@
+/* src/components/CurrentSelectionSummary.css */
+
+.current-selection-summary {
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+  }
+  
+  .current-selection-summary h3 {
+    margin-top: 30;
+  }
+  
+  .selection-item {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+  }
+  
+  .selection-item .icon {
+    margin-right: 10px;
+  }
+  
+  .extras-section {
+    margin-top: 20px;
+  }
+  
+  .error-message {
+    margin-top: 20px;
+  }
+  
+  /* Adjust for scrolling content */
+  .current-selection-summary {
+    max-height: 100%;
+    overflow-y: auto;
+    margin-top: 68px;
+  }
+  

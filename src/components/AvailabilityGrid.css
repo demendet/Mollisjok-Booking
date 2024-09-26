@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+.availability-grid {
+    margin-bottom: 20px;
+}
+
+.grid-header button {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.grid-header span {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.grid-container {
+    overflow: visible; /* Ensure it doesn't scroll */
+}
+
+.grid-row {
+    display: flex;
+}
+
+.grid-row.header-row {
+    font-weight: bold;
+    background-color: #f0f0f0;
+}
+
+.grid-cell {
+    min-width: 35px;
+    padding: 10px; /* Adjust padding for better spacing */
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 0.7em;
+    border-radius: 4px; /* Slight rounding for aesthetics */
+    box-sizing: border-box; /* Ensure padding doesn't affect width/height */
+}
+
+.cabin-cell {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    min-width: 150px;
+    text-align: left;
+}
+
+.date-cell {
+    height: 50px; /* Fixed height for rectangular shape */
+    transition: transform 0.2s, opacity 0.2s;
+    animation: fadeInUp 0.5s ease-in-out;
+}
+
+.date-cell.available {
+    background-color: #81c784;
+    color: white;
+}
+
+.date-cell.booked {
+    background-color: #e57373;
+    color: white;
+}
+
+.date-cell::after {
+    content: attr(data-status);
+    display: block;
+    font-size: 1em;
+    font-family: 'Roboto', sans-serif;
+}
+
+.date-cell:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.legend-color {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.legend-color.available {
+    background-color: #81c784;
+}
+
+.legend-color.booked {
+    background-color: #e57373;
+}
+
+.MuiAccordionDetails-root {
+    max-height: none;
+    overflow: visible;
+  }
