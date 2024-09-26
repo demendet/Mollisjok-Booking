@@ -33,12 +33,6 @@ h2 {
   flex: 1;
 }
 
-.cabin-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
 .submit-button {
   background-color: #1976d2;
   color: #fff;

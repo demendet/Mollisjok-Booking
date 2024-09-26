@@ -1,0 +1,21 @@
+/* src/components/GuestSelector.css */
+
+.guest-selector-overlay-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .guest-controls {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+  }
+  
+  .guest-count {
+    margin: 0 10px;
+    min-width: 20px;
+    text-align: center;
+    font-size: 1.2em;
+  }
+  

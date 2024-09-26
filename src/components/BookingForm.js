@@ -3,22 +3,21 @@
 import React, { useState, useEffect } from 'react';
 import CabinCard from './CabinCard';
 import CustomDatePicker from './CustomDatePicker';
-import CurrentSelectionSummary from './CurrentSelectionSummary';
 import GuestSelector from './GuestSelector';
 import BookingSummary from './BookingSummary'; // Import BookingSummary
-import { Stepper, Step, StepLabel } from '@mui/material';
+import { Stepper, Step, StepLabel, Typography, Button } from '@mui/material';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { differenceInCalendarDays } from 'date-fns';
 import './BookingForm.css';
 import AvailabilityGrid from './AvailabilityGrid';
 import {
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    Typography,
-  } from '@mui/material';
-  import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CurrentSelectionSummary from './CurrentSelectionSummary';
 
 const BookingForm = ({ cabins }) => {
   const [checkIn, setCheckIn] = useState(null);
@@ -27,8 +26,8 @@ const BookingForm = ({ cabins }) => {
   const [extras, setExtras] = useState({ halfBoard: false, sauna: false });
   const [selectedCabin, setSelectedCabin] = useState(null);
   const [unavailableCabins, setUnavailableCabins] = useState([]);
-  const [filteredCabins, setFilteredCabins] = useState(cabins);
   const [step, setStep] = useState(0);
+  const [showGuestSelector, setShowGuestSelector] = useState(false);
 
   const HUNTING_SEASON_MIN_STAY = 5; // Minimum 5 nights during hunting season
 
@@ -39,15 +38,17 @@ const BookingForm = ({ cabins }) => {
     const seasonEnd = new Date(endDate.getFullYear(), 8, 30); // September 30th
     return startDate <= seasonEnd && endDate >= seasonStart;
   };
-  
+
   const isMandatoryHalfBoardPeriod = (startDate, endDate) => {
     if (!startDate || !endDate) return false;
     // March and April (months 2 and 3)
     const startMonth = startDate.getMonth();
     const endMonth = endDate.getMonth();
     return (
-      (startMonth === 2 || startMonth === 3) ||
-      (endMonth === 2 || endMonth === 3) ||
+      startMonth === 2 ||
+      startMonth === 3 ||
+      endMonth === 2 ||
+      endMonth === 3 ||
       isHuntingSeason(startDate, endDate)
     );
   };
@@ -59,7 +60,7 @@ const BookingForm = ({ cabins }) => {
         setUnavailableCabins([]);
         return;
       }
-  
+
       // Fetch bookings that overlap with the selected dates
       const bookingsRef = collection(db, 'bookings');
       const q = query(
@@ -75,26 +76,14 @@ const BookingForm = ({ cabins }) => {
       });
       setUnavailableCabins(bookedCabinIds);
     };
-  
+
     fetchUnavailableCabins();
   }, [checkIn, checkOut]);
-
-  useEffect(() => {
-    const availableCabins = cabins.filter((cabin) => {
-      const isAvailable = !unavailableCabins.includes(cabin.id);
-      const canAccommodateGuests = cabin.maxGuests >= guests;
-      return isAvailable && canAccommodateGuests;
-    });
-    setFilteredCabins(availableCabins);
-  }, [unavailableCabins, cabins, guests]);
-  
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setStep(1); // Move to BookingSummary step
   };
-
 
   const handleBack = () => {
     setStep(0); // Go back to BookingForm step
@@ -111,30 +100,18 @@ const BookingForm = ({ cabins }) => {
   };
 
   const handleCabinSelect = (cabin) => {
+    if (unavailableCabins.includes(cabin.id)) {
+      // Do not allow selecting unavailable cabins
+      return;
+    }
     setSelectedCabin(cabin);
   };
 
-  // Helper functions
-  // const isDateInRange = (
-  //   startDate,
-  //   endDate,
-  //   startMonth,
-  //   startDay,
-  //   endMonth,
-  //   endDay
-  // ) => {
-  //   if (!startDate || !endDate) {
-  //     return false;
-  //   }
-  //   const start = new Date(
-  //     startDate.getFullYear(),
-  //     startMonth - 1,
-  //     startDay
-  //   );
-  //   const end = new Date(endDate.getFullYear(), endMonth - 1, endDay);
-  //   return startDate <= end && endDate >= start;
-  // };
+  const toggleGuestSelector = () => {
+    setShowGuestSelector(!showGuestSelector);
+  };
 
+  // Helper functions
   const isPeakSeason = (startDate, endDate) => {
     if (!startDate || !endDate) {
       return false;
@@ -171,25 +148,25 @@ const BookingForm = ({ cabins }) => {
   const calculateTotalPrice = () => {
     if (!selectedCabin || !checkIn || !checkOut) return 0;
     const days = differenceInCalendarDays(checkOut, checkIn); // Number of nights
-  
+
     let total = selectedCabin.basePrice * days * guests;
-  
+
     // Check if mandatory half-board applies
-    const mandatoryHalfBoard = isMandatoryHalfBoardPeriod();
-  
+    const mandatoryHalfBoard = isMandatoryHalfBoardPeriod(checkIn, checkOut);
+
     if (mandatoryHalfBoard) {
       total += 450 * guests * days;
     } else if (extras.halfBoard) {
       total += 450 * guests * days;
     }
-  
+
     if (extras.sauna) total += 200 * days;
-  
+
     // Apply peak season surcharge during April weekends (if any)
     if (isPeakSeason(checkIn, checkOut)) {
       total *= 1.2; // 20% surcharge
     }
-  
+
     return Math.round(total);
   };
 
@@ -201,6 +178,7 @@ const BookingForm = ({ cabins }) => {
     }
     return null;
   };
+
   if (step === 1) {
     // Render BookingSummary component
     return (
@@ -227,78 +205,103 @@ const BookingForm = ({ cabins }) => {
         </Step>
       </Stepper>
 
-      <div className="selection-container">
-      <CustomDatePicker
-  checkInDate={checkIn}
-  checkOutDate={checkOut}
-  onChange={handleDateChange}
-/>
+      {/* Top Bar with Selected Cabin, Date Picker, and Guest Selector */}
+      <div className="top-bar">
+        {/* Selected Cabin Display */}
+        <div className="top-bar-item">
+          <div className="pill">
+            <Typography variant="subtitle1">
+              {selectedCabin ? selectedCabin.name : 'Selected Cabin'}
+            </Typography>
+          </div>
+        </div>
 
-        <GuestSelector
-  guests={guests}
-  setGuests={setGuests}
-  maxGuests={Math.max(...cabins.map((cabin) => cabin.maxGuests))}
-/>
+        {/* Date Picker */}
+        <div className="top-bar-item">
+          <CustomDatePicker
+            checkInDate={checkIn}
+            checkOutDate={checkOut}
+            onChange={handleDateChange}
+          />
+        </div>
 
+        {/* Guest Selector */}
+        <div className="top-bar-item">
+          <div className="pill" onClick={toggleGuestSelector}>
+            <Typography variant="subtitle1">Guests: {guests}</Typography>
+          </div>
+          {showGuestSelector && (
+            <div className="guest-selector-overlay">
+              <GuestSelector
+                guests={guests}
+                setGuests={setGuests}
+                maxGuests={Math.max(...cabins.map((cabin) => cabin.maxGuests))}
+                onClose={toggleGuestSelector}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
+      {/* Availability Accordion */}
       <Accordion>
-  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-    <Typography variant="h6">Check Availability</Typography>
-  </AccordionSummary>
-  <AccordionDetails>
-    <AvailabilityGrid startDate={checkIn} />
-  </AccordionDetails>
-</Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">Check Availability</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <AvailabilityGrid startDate={checkIn} />
+        </AccordionDetails>
+      </Accordion>
 
+      {/* Cabin Selection */}
       <div className="main-content">
         <div className="cabin-section">
           <h2>Select Cabin</h2>
-          {filteredCabins.length === 0 && (
+          {cabins.length === 0 && (
             <p>No cabins available for the selected dates and guest count.</p>
           )}
           <div className="cabin-list">
-  {cabins.map((cabin) => (
-    <CabinCard
-      key={cabin.id}
-      cabin={cabin}
-      onSelect={() => handleCabinSelect(cabin)}
-      isSelected={selectedCabin?.id === cabin.id}
-      isUnavailable={unavailableCabins.includes(cabin.id)}
-    />
-  ))}
-</div>
+            {cabins.map((cabin) => (
+              <CabinCard
+                key={cabin.id}
+                cabin={cabin}
+                onSelect={() => handleCabinSelect(cabin)}
+                isSelected={selectedCabin?.id === cabin.id}
+                isUnavailable={unavailableCabins.includes(cabin.id)}
+              />
+            ))}
+          </div>
         </div>
 
         <div className="current-selection">
-        <CurrentSelectionSummary
-          checkIn={checkIn}
-          checkOut={checkOut}
-          guests={guests}
-          selectedCabin={selectedCabin}
-          totalPrice={calculateTotalPrice()}
-          unavailableCabins={unavailableCabins}
-          errorMessage={
-            capacityErrorMessage() ||
-            (checkIn && checkOut && !meetsMinimumStay()
-              ? isHuntingSeason(checkIn, checkOut)
-                ? `Minimum stay of ${HUNTING_SEASON_MIN_STAY} nights is required during the hunting season.`
-                : `Minimum stay of ${selectedCabin.policies.minimumStay} nights is required for this cabin.`
-              : null)
-          }
-          onSubmit={handleSubmit}
-          isSubmitDisabled={
-            !selectedCabin ||
-            !checkIn ||
-            !checkOut ||
-            !meetsMinimumStay() ||
-            capacityErrorMessage() ||
-            unavailableCabins.includes(selectedCabin?.id)
-          }
-          extras={extras}
-          onExtraChange={handleExtraChange}
-        />
-      </div>
+          <CurrentSelectionSummary
+            checkIn={checkIn}
+            checkOut={checkOut}
+            guests={guests}
+            selectedCabin={selectedCabin}
+            totalPrice={calculateTotalPrice()}
+            unavailableCabins={unavailableCabins}
+            errorMessage={
+              capacityErrorMessage() ||
+              (checkIn && checkOut && !meetsMinimumStay()
+                ? isHuntingSeason(checkIn, checkOut)
+                  ? `Minimum stay of ${HUNTING_SEASON_MIN_STAY} nights is required during the hunting season.`
+                  : `Minimum stay of ${selectedCabin.policies.minimumStay} nights is required for this cabin.`
+                : null)
+            }
+            onSubmit={handleSubmit}
+            isSubmitDisabled={
+              !selectedCabin ||
+              !checkIn ||
+              !checkOut ||
+              !meetsMinimumStay() ||
+              capacityErrorMessage() ||
+              unavailableCabins.includes(selectedCabin?.id)
+            }
+            extras={extras}
+            onExtraChange={handleExtraChange}
+          />
+        </div>
       </div>
     </div>
   );

@@ -109,13 +109,21 @@ const CustomDatePicker = ({ checkInDate, checkOutDate, onChange }) => {
           <div className="months-container">
             {months.map((month, index) => {
               const days = [];
-              const firstDayIndex = new Date(
-                month.getFullYear(),
-                month.getMonth(),
-                1
-              ).getDay();
-              // Adjust for Sunday as the first day of the week
+              const firstDayIndex = (new Date(month.getFullYear(), month.getMonth(), 1).getDay() + 6) % 7;
+
+              // Adjust for Monday as the first day of the week
               const emptyCells = (firstDayIndex + 6) % 7;
+
+              // Weekday labels
+              const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+              days.push(
+                ...weekdays.map((day) => (
+                  <div key={`weekday-${day}`} className="weekday-cell">
+                    {day}
+                  </div>
+                ))
+              );
 
               for (let i = 0; i < emptyCells; i++) {
                 days.push(
@@ -141,7 +149,8 @@ const CustomDatePicker = ({ checkInDate, checkOutDate, onChange }) => {
                     selectedStartDate.toDateString();
                 const isEndDate =
                   selectedEndDate &&
-                  currentDate.toDateString() === selectedEndDate.toDateString();
+                  currentDate.toDateString() ===
+                    selectedEndDate.toDateString();
 
                 const isDisabled = isDateDisabled(currentDate);
 
@@ -176,7 +185,7 @@ const CustomDatePicker = ({ checkInDate, checkOutDate, onChange }) => {
                         </button>
                       )}
                       <h3 className="calendar-title">
-                        {month.toLocaleString('no-NO', {
+                        {month.toLocaleString('default', {
                           month: 'long',
                           year: 'numeric',
                         })}
@@ -252,7 +261,7 @@ const CustomDatePicker = ({ checkInDate, checkOutDate, onChange }) => {
 
   return (
     <div className="date-picker-container">
-      <div className="date-selection" onClick={toggleCalendar}>
+      <div className="pill date-selection" onClick={toggleCalendar}>
         {selectedDateRange}
       </div>
       {showCalendar && renderCalendar()}

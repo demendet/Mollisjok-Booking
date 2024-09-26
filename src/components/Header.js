@@ -8,14 +8,22 @@ import './Header.css';
 const Header = () => {
   return (
     <header className="header">
-      <h1>Mollisjok Lodge AS</h1>
-      <p>
-        I perioden januar og februar tar vi bestillinger over epost:
-        piera@mollisjok.com
-      </p>
-      <Link to="/admin" className="admin-button">
-        <Button variant="outlined">Admin Dashboard</Button>
-      </Link>
+      <div className="header-content">
+        <div className="header-text">
+          <h1>Mollisjok Lodge AS</h1>
+          <p>
+            I perioden januar og februar tar vi bestillinger over epost:
+            <a href="mailto:piera@mollisjok.com"> piera@mollisjok.com</a>
+          </p>
+        </div>
+        <div className="admin-button">
+          <Link to="/admin">
+            <Button variant="outlined" color="primary" size="small">
+              Admin
+            </Button>
+          </Link>
+        </div>
+      </div>
     </header>
   );
 };

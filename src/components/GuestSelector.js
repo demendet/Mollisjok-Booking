@@ -1,25 +1,64 @@
 // src/components/GuestSelector.js
 
-import React from 'react';
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import React, { useState } from 'react';
+import './GuestSelector.css';
+import { Typography, IconButton, Button } from '@mui/material';
+import { Remove, Add } from '@mui/icons-material';
 
-const GuestSelector = ({ guests, setGuests, maxGuests }) => {
+const GuestSelector = ({ guests, setGuests, maxGuests, onClose }) => {
+  const [localGuests, setLocalGuests] = useState(guests);
+
+  const handleDecrement = () => {
+    if (localGuests > 1) {
+      setLocalGuests(localGuests - 1);
+    }
+  };
+
+  const handleIncrement = () => {
+    if (localGuests < maxGuests) {
+      setLocalGuests(localGuests + 1);
+    }
+  };
+
+  const handleDone = () => {
+    setGuests(localGuests);
+    onClose();
+  };
+
   return (
-    <FormControl variant="outlined" size="small" style={{ minWidth: 120 }}>
-      <InputLabel id="guest-label">Guests</InputLabel>
-      <Select
-        labelId="guest-label"
-        value={guests}
-        onChange={(e) => setGuests(parseInt(e.target.value))}
-        label="Guests"
+    <div className="guest-selector-overlay-content">
+      <Typography variant="h6">Select Guests</Typography>
+      <div className="guest-controls">
+        <IconButton
+          onClick={handleDecrement}
+          disabled={localGuests <= 1}
+          aria-label="decrease guests"
+          size="small"
+        >
+          <Remove />
+        </IconButton>
+        <Typography variant="body1" className="guest-count">
+          {localGuests}
+        </Typography>
+        <IconButton
+          onClick={handleIncrement}
+          disabled={localGuests >= maxGuests}
+          aria-label="increase guests"
+          size="small"
+        >
+          <Add />
+        </IconButton>
+      </div>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleDone}
+        fullWidth
+        style={{ marginTop: '10px' }}
       >
-        {[...Array(maxGuests).keys()].map((num) => (
-          <MenuItem key={num + 1} value={num + 1}>
-            {num + 1}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+        Done
+      </Button>
+    </div>
   );
 };
 

@@ -1,14 +1,130 @@
 /* src/components/Header.css */
 
+/* Ensure the header stretches across the screen */
 .header {
+  background-color: #ffffff; /* Modern white background */
+  padding: 20px 40px; /* Increased horizontal padding */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Enhanced shadow for depth */
+  width: 100%; /* Stretch across the screen */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Remove max-width and center alignment to allow full-width */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap; /* Prevent wrapping for a cleaner layout */
+  width: 100%; /* Full width */
+}
+
+/* Header Text Styling */
+.header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-text h1 {
+  margin: 0;
+  font-family: 'Roboto', sans-serif; /* Modern sans-serif font */
+  font-size: 2em;
+  color: #1976d2; /* Primary color for the title */
+}
+
+.header-text p {
+  margin: 5px 0 0 0;
+  font-size: 1em;
+  color: #555555; /* Slightly darker for readability */
+  line-height: 1.5;
+}
+
+.header-text a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.header-text a:hover {
+  text-decoration: underline;
+}
+
+/* Admin Button Styling */
+.admin-button {
+  /* No additional styling needed as flexbox handles positioning */
+}
+
+.admin-button a {
+  text-decoration: none;
+}
+
+.admin-button .MuiButton-root {
+  padding: 6px 12px; /* Smaller padding for a tiny button */
+  font-size: 0.875em; /* Smaller font size */
+  border-radius: 4px; /* Slightly rounded corners */
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.admin-button .MuiButton-root:hover {
+  background-color: #115293; /* Darker shade on hover */
+  transform: translateY(-2px); /* Slight lift on hover */
+}
+
+/* Responsive Design for Tablets and Mobile Phones */
+@media (max-width: 1024px) {
+  .header-content {
+    padding: 20px;
+  }
+
+  .header-text h1 {
+    font-size: 1.8em;
+  }
+
+  .header-text p {
+    font-size: 0.95em;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    margin-bottom: 20px;
-    position: relative;
   }
-  
+
+  .header-text {
+    margin-bottom: 15px;
+  }
+
   .admin-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
   }
-  
+
+  .admin-button .MuiButton-root {
+    width: auto;
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 15px 20px;
+  }
+
+  .header-text h1 {
+    font-size: 1.5em;
+  }
+
+  .header-text p {
+    font-size: 0.9em;
+  }
+
+  .admin-button .MuiButton-root {
+    padding: 4px 8px;
+    font-size: 0.8em;
+  }
+}
