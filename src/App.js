@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import BookingForm from './components/BookingForm';
-import BookingSummary from './components/BookingSummary';
 import cabinsData from './data/cabinsData';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';

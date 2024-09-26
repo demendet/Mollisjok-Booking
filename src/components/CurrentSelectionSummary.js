@@ -27,12 +27,6 @@ const CurrentSelectionSummary = ({
   const nights =
     checkIn && checkOut ? differenceInCalendarDays(checkOut, checkIn) : 0;
 
-  const isHuntingSeason = (startDate, endDate) => {
-    if (!startDate || !endDate) return false;
-    const seasonStart = new Date(startDate.getFullYear(), 8, 10); // September 10th
-    const seasonEnd = new Date(endDate.getFullYear(), 8, 30); // September 30th
-    return startDate <= seasonEnd && endDate >= seasonStart;
-  };
 
   const isMandatoryHalfBoardPeriod = () => {
     if (!checkIn || !checkOut) return false;

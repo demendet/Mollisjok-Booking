@@ -26,14 +26,10 @@ const BookingForm = ({ cabins }) => {
   const [guests, setGuests] = useState(1);
   const [extras, setExtras] = useState({ halfBoard: false, sauna: false });
   const [selectedCabin, setSelectedCabin] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
   const [unavailableCabins, setUnavailableCabins] = useState([]);
   const [filteredCabins, setFilteredCabins] = useState(cabins);
   const [step, setStep] = useState(0);
 
-  // Hunting season dates and minimum stay
-  const HUNTING_SEASON_START = { month: 9, day: 10 }; // September 10th
-  const HUNTING_SEASON_END = { month: 9, day: 30 }; // September 30th
   const HUNTING_SEASON_MIN_STAY = 5; // Minimum 5 nights during hunting season
 
   // Function to check if dates fall within hunting season
@@ -119,25 +115,25 @@ const BookingForm = ({ cabins }) => {
   };
 
   // Helper functions
-  const isDateInRange = (
-    startDate,
-    endDate,
-    startMonth,
-    startDay,
-    endMonth,
-    endDay
-  ) => {
-    if (!startDate || !endDate) {
-      return false;
-    }
-    const start = new Date(
-      startDate.getFullYear(),
-      startMonth - 1,
-      startDay
-    );
-    const end = new Date(endDate.getFullYear(), endMonth - 1, endDay);
-    return startDate <= end && endDate >= start;
-  };
+  // const isDateInRange = (
+  //   startDate,
+  //   endDate,
+  //   startMonth,
+  //   startDay,
+  //   endMonth,
+  //   endDay
+  // ) => {
+  //   if (!startDate || !endDate) {
+  //     return false;
+  //   }
+  //   const start = new Date(
+  //     startDate.getFullYear(),
+  //     startMonth - 1,
+  //     startDay
+  //   );
+  //   const end = new Date(endDate.getFullYear(), endMonth - 1, endDay);
+  //   return startDate <= end && endDate >= start;
+  // };
 
   const isPeakSeason = (startDate, endDate) => {
     if (!startDate || !endDate) {
