@@ -89,11 +89,10 @@ const AvailabilityGrid = ({ startDate: propsStartDate }) => {
         </div>
       </div>
       <div className="grid-container">
-        {/* Adjust the grid to be more responsive */}
         <div className="grid-row header-row">
           <div className="grid-cell cabin-cell">Cabin</div>
           {dates.map((date) => (
-            <div key={date.toISOString()} className="grid-cell date-cell">
+            <div key={date.toISOString()} className="grid-cell date-cell header-date-cell">
               {date.toLocaleDateString('no-NO', { day: 'numeric', month: 'short' })}
             </div>
           ))}
@@ -104,16 +103,18 @@ const AvailabilityGrid = ({ startDate: propsStartDate }) => {
               {cabin.name} (Max {cabin.maxGuests})
             </div>
             {dates.map((date) => {
-              const isBooked = isCabinBookedOnDate(cabin.id, date);
-              const statusText = isBooked ? 'Booked' : 'Available';
-              return (
-                <div
-                  key={`${cabin.id}-${date.toISOString()}`}
-                  className={`grid-cell date-cell ${isBooked ? 'booked' : 'available'}`}
-                  data-status={statusText}
-                ></div>
-              );
-            })}
+    const isBooked = isCabinBookedOnDate(cabin.id, date);
+    const statusText = isBooked ? 'Booked' : 'Available';
+    return (
+        <div
+            key={`${cabin.id}-${date.toISOString()}`}
+            className={`grid-cell date-cell ${isBooked ? 'booked' : 'available'}`}
+            data-status={statusText}
+        >
+            
+        </div>
+    );
+})}
           </div>
         ))}
       </div>

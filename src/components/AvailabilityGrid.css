@@ -19,13 +19,11 @@
 
 .grid-container {
     overflow-x: auto; /* Allow horizontal scrolling */
-  }
-  
-  .grid-row {
+}
+
+.grid-row {
     display: flex;
-    flex-shrink: 0; /* Prevent shrinking */
-  }
-  
+}
 
 .grid-row.header-row {
     font-weight: bold;
@@ -33,27 +31,38 @@
 }
 
 .grid-cell {
-    min-width: 35px;
-    padding: 10px; /* Adjust padding for better spacing */
+    width: 60px; /* Fixed width for square shape */
+    height: 60px; /* Fixed height for square shape */
     text-align: center;
     border: 1px solid #ddd;
-    font-size: 0.7em;
-    border-radius: 4px; /* Slight rounding for aesthetics */
+    font-size: 0.9em; /* Adjusted font size for better visibility */
+    border-radius: 0; /* No rounding to keep it square */
     box-sizing: border-box; /* Ensure padding doesn't affect width/height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .cabin-cell {
     font-family: 'Roboto', sans-serif;
     font-weight: bold;
     min-width: 150px;
-    
     text-align: left;
 }
 
 .date-cell {
-    height: 50px; /* Fixed height for rectangular shape */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+    height: 60px; /* Fixed height for rectangular shape */
+    width: 60px; /* Ensure same width for symmetry */
     transition: transform 0.2s, opacity 0.2s;
     animation: fadeInUp 0.5s ease-in-out;
+    white-space: nowrap; /* Prevent day and month from breaking into two lines */
+}
+
+.header-date-cell {
+    white-space: nowrap; /* Ensure that day and month stay in one line */
 }
 
 .date-cell.available {
@@ -69,7 +78,7 @@
 .date-cell::after {
     content: attr(data-status);
     display: block;
-    font-size: 1em;
+    font-size: 0.8em; /* Adjusted font size */
     font-family: 'Roboto', sans-serif;
 }
 
@@ -113,16 +122,28 @@
 .MuiAccordionDetails-root {
     max-height: none;
     overflow: visible;
-  }
+}
 
-  @media (max-width: 800px) {
+@media (max-width: 800px) {
     .grid-cell {
-      min-width: 55px;
-      font-size: 0.em;
-      padding: 5px;
+        width: 40px; /* Adjusted for smaller screens */
+        height: 40px; /* Adjusted for smaller screens */
+        font-size: 0.8em;
+        padding: 0; /* Removed padding for consistency */
+        flex-basis: 40px; /* Ensure all boxes maintain the same size */
     }
-  
+
+    .date-cell {
+        width: 40px; /* Ensure same width for date cells on mobile */
+        height: 40px; /* Ensure same height for date cells on mobile */
+    }
+
+    .date-cell.booked {
+        width: 40px; /* Explicitly set size for booked cells on mobile */
+        height: 40px; /* Explicitly set size for booked cells on mobile */
+    }
+
     .cabin-cell {
-      min-width: 100px;
+        min-width: 100px;
     }
-  }
+}
