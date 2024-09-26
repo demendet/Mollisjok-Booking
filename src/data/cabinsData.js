@@ -2,6 +2,15 @@
 const sampleImageUrl =
   'https://images.squarespace-cdn.com/content/v1/5c162bc6f793925de2e7c883/1572100623021-ANEREU0ZVDPZH4XK1B62/5V7A6534.jpg?format=2500w';
 
+  const sampleImageUrl2 =
+  'https://cdn-docs.sirvoy.com/images/room_type/46881/6f9aa2a2-c342-422c-b610-d0be926fcfc8_large?t=1727286407&v=2';
+
+  const sampleImageUrl1 =
+  'https://images.squarespace-cdn.com/content/v1/5c162bc6f793925de2e7c883/1545136550964-Y7TUMMATG9YRX1HMAELO/20180801_032218.jpg?format=2500w';
+
+
+
+
 const cabinsData = [
   {
     id: 1,
@@ -12,7 +21,7 @@ const cabinsData = [
       'The cabin is of basic standard with 5 beds, a living room, and a kitchen with simple cooking facilities. Electricity is available for lighting and charging small devices. No WC or shower. Heating is provided by a wood stove. Bed linen is included.',
     nonSmoking: true,
     refrigerator: false,
-    imageUrl: sampleImageUrl,
+    imageUrl: sampleImageUrl1,
     policies: {
       mandatoryHalfBoard: true, // From March 1st to May 4th
       minimumStay: 2, // Minimum stay in nights during peak season
@@ -27,7 +36,7 @@ const cabinsData = [
       'The cabin is of basic standard with 5 beds, a living room, and a kitchen with simple cooking facilities. Electricity for lighting and charging devices. No WC or shower. Heating via wood stove. Bed linen included.',
     nonSmoking: false,
     refrigerator: false,
-    imageUrl: sampleImageUrl,
+    imageUrl: sampleImageUrl2,
     policies: {
       mandatoryHalfBoard: false,
       minimumStay: 1,
@@ -42,7 +51,7 @@ const cabinsData = [
       'A basic standard cabin with 10 beds, living room, and simple kitchen facilities. Electricity available for lighting and charging devices. No WC or shower. Heated by wood stove. Bed linen included.',
     nonSmoking: false,
     refrigerator: false,
-    imageUrl: sampleImageUrl,
+    imageUrl: sampleImageUrl1,
     policies: {
       mandatoryHalfBoard: true,
       minimumStay: 2,
@@ -57,7 +66,7 @@ const cabinsData = [
       'Basic standard cabin with 4 beds, living room, and simple kitchen facilities. Electricity for lighting and charging devices. No WC or shower. Heated by wood stove. Bed linen included.',
     nonSmoking: true,
     refrigerator: false,
-    imageUrl: sampleImageUrl,
+    imageUrl: sampleImageUrl1,
     policies: {
       mandatoryHalfBoard: true,
       minimumStay: 2,
@@ -72,7 +81,7 @@ const cabinsData = [
       'A basic standard cabin with 10 beds, living room, and simple kitchen facilities. Electricity for lighting and charging devices. No WC or shower. Heating via wood stove. Bed linen included.',
     nonSmoking: true,
     refrigerator: true,
-    imageUrl: sampleImageUrl,
+    imageUrl: sampleImageUrl1,
     policies: {
       mandatoryHalfBoard: true,
       minimumStay: 2,
